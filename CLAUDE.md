@@ -1,15 +1,75 @@
-# TEC Domain App Template — Claude Code Instructions
+# TEC Brookfield — Claude Code Instructions
 
-## What This Repo Is
+> ⚡ **SESSION START:** اقرأ `knowledge-base/C-02___CURRENT_STATE_.md` + **app charter
+> `knowledge-base/C-131___BROOKFIELD_INFRASTRUCTURE_RUNTIME.md`** من `yasira82/tec-knowledge-base` (branch: `main`).
 
-The **golden starter template** for a new app in the TEC Federated Platform.
-It ships a correct, Portal-ready skeleton: Hub SSO, dual-mode Pi payments,
-CSRF, legal pages, and CI policy guards. Clone it, run the "New app setup"
-checklist below, and you have a compliant app — no missing pieces.
+## What This App Is
 
-**Reference of record:** `yasira82/tec-knowledge-base` — especially
-`C-12_Dual_Mode_Payment.md` (payment + anti-regression) and
-`audits/PORTAL_SUBMISSION_RUNBOOK_*.md`.
+**The Infrastructure & Institutional Assets Runtime** of the Pi economy (C-131) —
+the **System of Institutional Assets** (B2B / B2I). Brookfield answers one question:
+
+```
+"How do we own, finance, and operate large-scale assets in the Pi economy?"
+```
+
+Brookfield is the **institutional counterpart to Estate**:
+- **Estate (C-114)** = individual / SME property (B2C — "where do I live?")
+- **Brookfield** = institutional / infrastructure assets (B2B/B2I — "who owns the project?")
+
+It is the **missing middle** of the Pi capital stack: **FundX raises** the capital,
+**Brookfield owns + operates** the asset, **Estate sells** the retail units.
+
+Built from `tec-template-base` (Next.js 15 frontend).
+
+**Current Phase: Brookfield V0/V1 — SIMULATED read-only preview.** Identity / domain /
+slug / legal + a themed home (a **simulated institutional portfolio** · the capital
+stack · phased asset classes · governance records) + a `/asset/[id]` detail page +
+**Brookfield Pro** (the Pi Portal "Process a Transaction" gate). Real assets / funds /
+REITs are **hard-gated** (below). Not yet deployed.
+
+---
+
+## Pi App Identity
+
+| Field | Value |
+|-------|-------|
+| **App** | TEC Brookfield |
+| **Domain** | `https://brookfield.tecosystem.app` |
+| **Pi App ID** | ⏳ TBD — register at Pi Developer Portal · then Vercel `NEXT_PUBLIC_PI_APP_ID` |
+| **APP_SOURCE slug** | `brookfield` (payment-service resolves `PI_API_KEY_BROOKFIELD`) — set in `src/lib/app-source.ts` |
+| **PI_SANDBOX** | `false` (Mainnet) |
+
+---
+
+## Brookfield-Specific Rules (C-131) — READ BEFORE ANY ASSET/FUND CODE
+
+### 🔴 Custody + Legal Hard-Gate — the DEFINING constraint (P0)
+Brookfield is **more regulated than FundX (C-113) or Insure (C-129)** —
+infrastructure investment funds + REITs = **securities law**. NO real Pi
+investment / fund / REIT mechanic ships until **ALL** of these are documented-done:
+1. **Legal clearance FIRST** — securities / REIT / institutional-investor law for the target jurisdiction, before any real Pi movement.
+2. **payment-service custody** — every invested π is held/moved/distributed BY `tec-payment-service` (Invariant #8). **brookfield-service NEVER holds capital** — it records asset + governance state and issues intents, never balances.
+3. **SYSTEM governance (C-110)** — permitted asset classes + fund types + return models + multi-party governance approved as governed workflows; full ActorContext + audit trail.
+4. **FundX V2 operational** — financing integrates FundX; Brookfield never re-implements capital raising.
+
+Until ALL exist, Brookfield ships **simulated / educational read-only ONLY** —
+sample portfolios + definitions + governance illustrations. **NO real Pi, NO
+investment, NO custody, NO REITs.** Every V1 asset carries `simulated: true`.
+
+### The ownership boundary
+Brookfield **OWNS**: asset records + governance records. Brookfield does **NOT OWN**:
+- **Capital custody** → `tec-payment-service` (Invariant #8). **Capital raising** → FundX (C-113).
+- **Operations** → Titan (C-130). **Verification** → Zone (C-120, presented, never minted).
+- **Legal** → external counsel. **Valuation** → external market data (via Analytics, never asserted).
+- **Retail unit sale** → Estate (C-114) / Commerce. **Reputation** → Legend (C-126). **Metrics** → Analytics (C-105).
+
+### Isolation (P6)
+Identity from the `tec_user` session cookie server-side — **never** a query param
+or body. No session → fail closed.
+
+**Reference of record:** `yasira82/tec-knowledge-base` —
+`C-131___BROOKFIELD_INFRASTRUCTURE_RUNTIME.md` (charter) + `C-113` (FundX gate posture) +
+`C-114` (Estate B2C) + `C-12_Dual_Mode_Payment.md` + `C-123` (session/cookies) + `C-71` (financial integrity).
 
 ---
 
@@ -43,6 +103,9 @@ if (isHubNavigation() || !(window as any).Pi || !piReady) {
 }
 // Mode 2: standalone — createPaymentRecord() then createU2APayment() (src/lib/pi-payment.ts)
 ```
+> Brookfield Pro (subscription) is the only buy flow — NOT an investment. Approve
+> under `PI_API_KEY_BROOKFIELD` (never the default Hub key — the Analytics
+> approve→502 lesson, C-12 §11).
 
 ### ADR-009 — Unified payment contract
 `amount` is a **number**; gateway path is **`/api/payment/*`** (singular); the only
@@ -58,79 +121,60 @@ API routes (BFF)  → @yasser172/tec-sdk via /api/bff/*  (server-only)
 ### Auth / cookies (LOCKED)
 SSO via Hub cookies `tec_access_token`, `tec_csrf`, `tec_user`. Never localStorage.
 Identity is derived from the `tec_user` cookie server-side — **never from the request body**.
+> `NEXT_PUBLIC_HUB_URL` MUST be `https://hub.tecosystem.app` — the apex `tecosystem.app`
+> is not the Hub → `ERR_CONNECTION_CLOSED` at login; redeploy after changing it.
 
 ---
 
-## What's included
+## Setup status + Roadmap (C-131 §Build Protocol)
 
 ```
-middleware.ts                              CSRF (double-submit OR Origin) + page guard
-src/app/api/auth/sso-callback/route.ts     Hub SSO landing (open-redirect-safe)
-src/app/api/auth/refresh/route.ts          token refresh
-src/app/api/bff/payment/{create,approve,complete,resolve-incomplete}/route.ts
-src/app/api/bff/items/route.ts             example domain route (copy this pattern)
-src/app/api/health/route.ts                health endpoint (C-92/C-96) — fail-safe, public, never 500s
-src/lib/pi-payment.ts                      createPaymentRecord + createU2APayment
-src/lib/pi/PiRuntime.ts                    PAL — single choke-point for window.Pi.* (R1)
-src/lib/pi/PiCircuitBreaker.ts             CLOSED→OPEN→HALF_OPEN (3 fails → 60s)
-src/lib/flags.ts                           feature flags (NEXT_PUBLIC_FLAG_*) + useFlag
-src/lib/observability/logger.ts            structured JSON logger (log.info/warn/error) — no silent failures (C-96)
-src/lib/observability/reportError.ts       Sentry-ready error reporter (single swap-point)
-src/app/privacy/page.tsx · terms/page.tsx  Pi Portal legal pages
-src/styles/tec-design-tokens.css           import in app/layout.tsx
-.github/workflows/ci.yml                   payment-policy + CSRF guard + lint/typecheck/test/build
-```
+Brookfield V0/V1 — SIMULATED preview (customized from template):
+  ✅ package.json name = tec-brookfield · APP_SOURCE = 'brookfield' (src/lib/app-source.ts)
+  ✅ sso-callback ALLOWED_AUDIENCES → brookfield.tecosystem.app + tec-brookfield.vercel.app
+  ✅ privacy + terms → TEC Brookfield / brookfield.tecosystem.app
+  ✅ NEW-A: no NEXT_PUBLIC_API_GATEWAY_URL / Railway host in the client bundle
+  ✅ /app themed: simulated institutional portfolio + capital stack + phased asset
+     classes + governance records + Brookfield Pro (real Pi U2A subscription)
+  ✅ /asset/[id] detail (simulated) + BFF /api/bff/brookfield/assets (sample, read-only)
 
-**v2 (production-ready by default):** every new app ships
-- `/api/health` — uniform C-92 signal (platform health runtime + observability scrape + SLO/runtime-evidence loop);
-- structured `log` + `reportError` — use `log.error`/`reportError` in catch blocks (a silent error handler is an invisible failure, C-96; `reportError` is the one place to wire Sentry per app);
-- `PiRuntime` (PAL) + `PiCircuitBreaker` — never call `window.Pi.*` directly; go through PiRuntime so an SDK change is a one-file fix (R1) and flapping is contained;
-- `flags.ts` — feature flags from day one (`NEXT_PUBLIC_FLAG_<NAME>`);
-- coverage gate — `npm run test:coverage` (add devDep `@vitest/coverage-v8`; 60% floor, raise as the app grows).
+Next (before live):
+  □ Register Pi App ID (Pi Developer Portal) → Vercel NEXT_PUBLIC_PI_APP_ID +
+    API_GATEWAY_URL · INTERNAL_SECRET · SSO_SECRET · NEXT_PUBLIC_HUB_URL=https://hub.tecosystem.app · PI_SANDBOX=false.
+  □ payment-service: set PI_API_KEY_BROOKFIELD on Railway (approve→502 otherwise, C-12 §11).
+  □ Hub SSO: add brookfield.tecosystem.app + tec-brookfield.vercel.app to Hub /api/auth/sso
+    ALLOWED_TARGETS + Hub domain registry.
+  □ Deploy (Vercel) + runtime-verify login (C-123) + a real Brookfield Pro payment
+    Mode 1 (Hub) AND Mode 2 (standalone).
 
----
-
-## New app setup checklist
-
-```
-□ package.json: set "name"
-□ middleware.ts: adjust PROTECTED_ROUTES
-□ sso-callback/route.ts: set ALLOWED_AUDIENCES + DEFAULT_REDIRECT to your domain
-□ src/lib/app-source.ts: set APP_SOURCE slug (ONE place — pi-payment.ts + payment/create
-   both import it, so they can't drift). Also set the matching PI_API_KEY_<SLUG> on
-   tec-payment-service — else Mode-2 approve fails with Pi 404 (KB C-12 §11). CI blocks 'app'.
-□ privacy/page.tsx + terms/page.tsx: set APP / DOMAIN / governing law / contacts
-□ Add ADR-007 isHubNavigation() guard to every buy handler
-□ .env: API_GATEWAY_URL · INTERNAL_SECRET · SSO_SECRET · NEXT_PUBLIC_PI_APP_ID · PI_SANDBOX=false (prod)
-   ⚠️ NEXT_PUBLIC_HUB_URL / NEXT_PUBLIC_APP_URL must be REAL https URLs (or unset).
-      A placeholder like `C_HUB_URL` becomes the login + Mode-1 payment redirect
-      target → `C_HUB_URL/hub` → 404 (July 2026 System incident). NEXT_PUBLIC_* is
-      inlined at BUILD time — you MUST redeploy after changing it. The code now
-      ignores a non-http value and falls back, but keep the env clean anyway.
-□ Pi Developer Portal: register domain + App ID; set /privacy + /terms URLs
-□ Verify a real Pi payment Mode 1 (via Hub) AND Mode 2 (standalone)
+Brookfield V2+ (POST Custody + Legal Hard-Gate — legal + payment-service custody +
+  SYSTEM + FundX V2): real infrastructure projects → institutional assets →
+  infrastructure financing → REITs. NONE ship until all P0 gates documented-done.
 ```
 
 ---
 
 ## What NOT To Do
 
+- Do NOT build real asset/fund/REIT/investment mechanics before the P0 gates (legal + payment-service custody + SYSTEM + FundX V2) — C-131
+- Do NOT hold capital in Brookfield or compute distributions here — payment-service custodies, FundX raises
+- Do NOT present simulated assets as real investments — every V1 asset is simulated
+- Do NOT mint verification — present Zone's verified flag, never create it
+- Do NOT assert valuation as truth — it is indicative (Analytics / external)
 - Do NOT validate CSRF in a route handler — middleware only (CI blocks it)
 - Do NOT send `amount` as a string, or use `/payments` / `x-service-secret`
 - Do NOT skip the ADR-007 `isHubNavigation()` guard before `window.Pi`
 - Do NOT store tokens in localStorage; do NOT derive identity from the body
 - Do NOT add `NEXT_PUBLIC_*` for internal service URLs or `INTERNAL_SECRET`
-- Do NOT use an open `redirect` param without the same-origin guard (open redirect)
-- Do NOT set `NEXT_PUBLIC_HUB_URL` / `NEXT_PUBLIC_APP_URL` to a non-URL placeholder
-  (e.g. `C_HUB_URL`) — it becomes the redirect target → 404. Real https URL or unset.
+- Do NOT set `NEXT_PUBLIC_HUB_URL` to the apex `tecosystem.app` — use `hub.tecosystem.app`
 
 ---
 
 ## Commit Convention
 
 ```
-feat(scope):  new feature      fix(payment): payment flow fix (test carefully)
-fix(scope):   bug fix          chore(scope): build/config
+feat(brookfield):  new asset feature   fix(payment): payment flow fix (test carefully)
+fix(brookfield):   bug fix             chore(scope):  build/config
 ```
 
 ---
