@@ -61,7 +61,7 @@ export default async function AssetDetail({ params }: { params: Promise<{ id: st
         )}
 
         <p style={{ marginTop: 20, fontSize: 12, opacity: 0.55, lineHeight: 1.6, borderLeft: `2px solid ${TEC_COLORS.gold}55`, paddingLeft: 12 }}>
-          <strong>Simulated (C-131).</strong> No real Pi, no investment. Capital custody is payment-service&rsquo;s
+          <strong>Simulated.</strong> No real Pi, no investment. Capital custody is payment-service&rsquo;s
           (Invariant #8), raising is FundX&rsquo;s, operations are Titan&rsquo;s, verification is Zone&rsquo;s —
           Brookfield records the asset + governance state only. Real flows are hard-gated to legal + SYSTEM.
         </p>
