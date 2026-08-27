@@ -39,7 +39,7 @@ export default function BrookfieldHome() {
         {/* ── PORTFOLIO ───────────────────────────────────────────── */}
         {tab === 'portfolio' && (<>
           {/* Simulated / legal banner */}
-          <div style={{ marginTop: 18, padding: '12px 16px', background: '#FBBF2411', border: `1px solid ${TEC_COLORS.gold}44`, borderRadius: 12, fontSize: 12.5, lineHeight: 1.6 }}>
+          <div style={{ marginTop: 18, padding: '12px 16px', background: '#FBB44A11', border: `1px solid ${TEC_COLORS.gold}44`, borderRadius: 12, fontSize: 12.5, lineHeight: 1.6 }}>
             <strong style={{ color: TEC_COLORS.gold }}>Simulated / educational preview.</strong> Every asset below is a
             simulation — <strong>no real Pi, no investment, no REITs</strong>. Institutional scale carries securities
             law: real capital ships only after legal clearance + payment-service custody + SYSTEM governance.
