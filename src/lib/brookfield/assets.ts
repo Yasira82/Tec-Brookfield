@@ -117,7 +117,7 @@ export const STATUS_META: Record<AssetStatus, { label: string; tone: string }> =
   DRAFT:       { label: 'Draft',       tone: '#8B5CF6' },
   VERIFIED:    { label: 'Verified',    tone: '#06B6D4' },
   FUNDED:      { label: 'Funded',      tone: '#22C55E' },
-  OPERATIONAL: { label: 'Operational', tone: '#FBBF24' },
+  OPERATIONAL: { label: 'Operational', tone: '#FBB44A' },
   CLOSED:      { label: 'Closed',      tone: '#9ca3af' },
 };
 
