@@ -25,7 +25,7 @@ Built from `tec-template-base` (Next.js 15 frontend).
 slug / legal + a themed home (a **simulated institutional portfolio** · the capital
 stack · phased asset classes · governance records) + a `/asset/[id]` detail page +
 **Brookfield Pro** (the Pi Portal "Process a Transaction" gate). Real assets / funds /
-REITs are **hard-gated** (below). Not yet deployed.
+REITs are **hard-gated** (below). Deployed (Mainnet) · Pi App ID registered · env set · payment live.
 
 ---
 
@@ -35,7 +35,7 @@ REITs are **hard-gated** (below). Not yet deployed.
 |-------|-------|
 | **App** | TEC Brookfield |
 | **Domain** | `https://brookfield.tecosystem.app` |
-| **Pi App ID** | ⏳ TBD — register at Pi Developer Portal · then Vercel `NEXT_PUBLIC_PI_APP_ID` |
+| **Pi App ID** | ✅ Registered (Mainnet) · Vercel `NEXT_PUBLIC_PI_APP_ID` |
 | **APP_SOURCE slug** | `brookfield` (payment-service resolves `PI_API_KEY_BROOKFIELD`) — set in `src/lib/app-source.ts` |
 | **PI_SANDBOX** | `false` (Mainnet) |
 
@@ -138,13 +138,13 @@ Brookfield V0/V1 — SIMULATED preview (customized from template):
      classes + governance records + Brookfield Pro (real Pi U2A subscription)
   ✅ /asset/[id] detail (simulated) + BFF /api/bff/brookfield/assets (sample, read-only)
 
-Next (before live):
-  □ Register Pi App ID (Pi Developer Portal) → Vercel NEXT_PUBLIC_PI_APP_ID +
+Live on Mainnet — all complete (SSoT: architecture/app-fleet.yaml):
+  ✅ Register Pi App ID (Pi Developer Portal) → Vercel NEXT_PUBLIC_PI_APP_ID +
     API_GATEWAY_URL · INTERNAL_SECRET · SSO_SECRET · NEXT_PUBLIC_HUB_URL=https://hub.tecosystem.app · PI_SANDBOX=false.
-  □ payment-service: set PI_API_KEY_BROOKFIELD on Railway (approve→502 otherwise, C-12 §11).
-  □ Hub SSO: add brookfield.tecosystem.app + tec-brookfield.vercel.app to Hub /api/auth/sso
+  ✅ payment-service: set PI_API_KEY_BROOKFIELD on Railway (approve→502 otherwise, C-12 §11).
+  ✅ Hub SSO: add brookfield.tecosystem.app + tec-brookfield.vercel.app to Hub /api/auth/sso
     ALLOWED_TARGETS + Hub domain registry.
-  □ Deploy (Vercel) + runtime-verify login (C-123) + a real Brookfield Pro payment
+  ✅ Deploy (Vercel) + runtime-verify login (C-123) + a real Brookfield Pro payment
     Mode 1 (Hub) AND Mode 2 (standalone).
 
 Brookfield V2+ (POST Custody + Legal Hard-Gate — legal + payment-service custody +
