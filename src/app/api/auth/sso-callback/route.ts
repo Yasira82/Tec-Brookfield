@@ -12,6 +12,7 @@ import { HUB_HOSTS }                 from '@/lib/pi-network';
 const ALLOWED_AUDIENCES = [
   'https://tec-brookfield.vercel.app',
   'https://brookfield.tecosystem.app',
+  'https://brookfield-test.tecosystem.app',
 ];
 const DEFAULT_REDIRECT = '/app';
 
