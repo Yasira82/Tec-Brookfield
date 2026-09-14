@@ -14,7 +14,7 @@ import {
   createU2APayment,
 } from '@/lib/pi-payment';
 
-const BROOKFIELD_PRO = { id: 'brookfield-pro', name: 'Brookfield Pro (monthly)', price: 25 };
+const BROOKFIELD_PRO = { id: 'brookfield_pro_monthly', name: 'Brookfield Pro (monthly)', price: 25 };
 
 export default function BrookfieldPro() {
   const [piReady, setPiReady] = useState(false);
@@ -67,8 +67,11 @@ export default function BrookfieldPro() {
     const internalId = await createPaymentRecord(price, id, name);
     if (!internalId) { setStatus('Could not start payment.'); return; }
 
-    setStatus('Awaiting Pi approval…');
-    const result = await createU2APayment(price, name, { item_id: id }, internalId);
+    // Report each step. One label for the whole flow could not say which of
+    // the four waits a stuck payment was stuck in.
+    const result = await createU2APayment(
+      price, name, { item_id: id, plan: 'PRO' }, internalId, setStatus,
+    );
     setStatus(
       result.success ? `✅ Subscribed — txid ${result.txid}` :
       result.status === 'cancelled' ? 'Payment cancelled.' :
@@ -88,6 +91,31 @@ export default function BrookfieldPro() {
             {daysRemaining <= 7 ? '⏳ ' : ''}Expires in {daysRemaining} day{daysRemaining === 1 ? '' : 's'}{daysRemaining <= 7 ? ' — re-subscribe to keep Pro (one-time monthly, no auto-renewal).' : '.'}
           </div>
         )}
+        {/* A subscription with no way to buy again is a dead end. Pi U2A is a
+            ONE-TIME payment — there is no auto-renewal — so the only way a Pro
+            month is ever followed by another is this button. The card used to
+            return here having told the reader to "re-subscribe" while offering
+            nothing to press.
+
+            It is also the app's ONLY payment surface: Brookfield is a subscription
+            app, so when commerce reports an active plan there is no other
+            control anywhere in the app that can start a Pi payment. Since the
+            subscription row is ONE PER USER for the whole platform (commerce
+            `user_id @unique`), buying Pro in any sibling app lights this card up
+            here — and without a button this app could never process a payment
+            of its own, which is exactly what the Pi Portal's "Process a
+            Transaction" step asks it to do. */}
+        <button
+          onClick={handleSubscribe}
+          style={{
+            marginTop: 14, background: 'transparent', color: TEC_COLORS.gold,
+            border: `1px solid ${TEC_COLORS.gold}66`, borderRadius: 10,
+            padding: '9px 16px', fontWeight: 700, fontSize: 13, cursor: 'pointer',
+          }}>
+          Renew — π {BROOKFIELD_PRO.price}/mo
+        </button>
+        <p style={{ opacity: 0.5, fontSize: 11, marginTop: 10 }}>Pi SDK: {piReady ? 'ready' : 'loading…'}</p>
+        {status && <p style={{ marginTop: 8, fontSize: 13 }}>{status}</p>}
       </div>
     );
   }
