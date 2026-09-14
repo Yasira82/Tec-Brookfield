@@ -14,7 +14,7 @@ import {
   createU2APayment,
 } from '@/lib/pi-payment';
 
-const BROOKFIELD_PRO = { id: 'brookfield-pro', name: 'Brookfield Pro (monthly)', price: 25 };
+const BROOKFIELD_PRO = { id: 'brookfield_pro_monthly', name: 'Brookfield Pro (monthly)', price: 25 };
 
 export default function BrookfieldPro() {
   const [piReady, setPiReady] = useState(false);
@@ -68,7 +68,7 @@ export default function BrookfieldPro() {
     if (!internalId) { setStatus('Could not start payment.'); return; }
 
     setStatus('Awaiting Pi approval…');
-    const result = await createU2APayment(price, name, { item_id: id }, internalId);
+    const result = await createU2APayment(price, name, { item_id: id, plan: 'PRO' }, internalId);
     setStatus(
       result.success ? `✅ Subscribed — txid ${result.txid}` :
       result.status === 'cancelled' ? 'Payment cancelled.' :
