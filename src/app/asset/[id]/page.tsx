@@ -27,10 +27,17 @@ export default async function AssetDetail({ params }: { params: Promise<{ id: st
           <h1 style={{ color: TEC_COLORS.gold, margin: 0, fontSize: 23 }}>{a.name}</h1>
         </div>
         <div style={{ display: 'flex', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 12, color: sm.tone, border: `1px solid ${sm.tone}55`, borderRadius: 20, padding: '3px 10px' }}>{sm.label}</span>
+          {/* C14 — a simulated asset shows ONE "Simulated" pill: no lifecycle status
+              and no Zone badge, which would read as facts about something that does not exist. */}
+          {a.simulated ? (
+            <span style={{ fontSize: 12, color: TEC_COLORS.gold, border: `1px solid ${TEC_COLORS.gold}55`, borderRadius: 20, padding: '3px 10px' }}>Simulated</span>
+          ) : (
+            <>
+              <span style={{ fontSize: 12, color: sm.tone, border: `1px solid ${sm.tone}55`, borderRadius: 20, padding: '3px 10px' }}>{sm.label}</span>
+              <span style={{ fontSize: 12, opacity: 0.7, border: '1px solid #ffffff22', borderRadius: 20, padding: '3px 10px' }}>{a.zoneVerified ? '✓ Zone verified' : 'Unverified'}</span>
+            </>
+          )}
           <span style={{ fontSize: 12, opacity: 0.7, border: '1px solid #ffffff22', borderRadius: 20, padding: '3px 10px' }}>{cm.label} · {a.scaleBand}</span>
-          <span style={{ fontSize: 12, opacity: 0.7, border: '1px solid #ffffff22', borderRadius: 20, padding: '3px 10px' }}>{a.zoneVerified ? '✓ Zone verified' : 'Unverified'}</span>
-          <span style={{ fontSize: 12, color: TEC_COLORS.gold, border: `1px solid ${TEC_COLORS.gold}55`, borderRadius: 20, padding: '3px 10px' }}>Simulated</span>
         </div>
 
         <p style={{ marginTop: 16, lineHeight: 1.6, opacity: 0.9 }}>{a.summary}</p>
