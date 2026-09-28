@@ -47,4 +47,9 @@ describe('TEC Brookfield — Infrastructure Runtime (C-131), read-only simulated
     expect(getAsset('renewable-energy-fund')?.class).toBe('INFRA_PROJECT');
     expect(getAsset('nope')).toBeNull();
   });
+
+  // C14 — a simulation must not carry Zone's badge: Zone verified none of these.
+  it('no simulated asset carries a Zone verification', () => {
+    for (const a of ASSETS) if (a.simulated) expect(a.zoneVerified).toBe(false);
+  });
 });

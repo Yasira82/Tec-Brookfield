@@ -41,6 +41,10 @@ export interface GovernanceRecord {
 }
 
 // Simulated institutional portfolio (educational).
+// C14 — every row below is a SIMULATION. None of them was verified by Zone, so none
+// carries the badge (the rule C7 set for every demo fixture: never a badge on a
+// fixture). A simulated row shows one "Simulated" pill instead of a lifecycle status
+// — "Verified", "Funded", "Decided" on something that does not exist read as facts.
 export const ASSETS: InstitutionalAsset[] = [
   {
     id: 'pi-datacenter-01',
@@ -49,7 +53,7 @@ export const ASSETS: InstitutionalAsset[] = [
     summary: 'Compute + storage infrastructure serving the Pi ecosystem.',
     scaleBand: 'Large',
     status: 'VERIFIED',
-    zoneVerified: true,
+    zoneVerified: false,   // a simulated asset never carries Zone's badge (C14)
     fundedPct: 40,
     ownedBy: 'FundX raises capital · Titan operates · payment-service custodies',
     simulated: true,
@@ -61,7 +65,7 @@ export const ASSETS: InstitutionalAsset[] = [
     summary: 'Solar + wind generation powering distributed Pi infrastructure.',
     scaleBand: 'Large',
     status: 'FUNDED',
-    zoneVerified: true,
+    zoneVerified: false,   // a simulated asset never carries Zone's badge (C14)
     fundedPct: 85,
     ownedBy: 'FundX (capital) · Titan (ops)',
     simulated: true,
@@ -73,7 +77,7 @@ export const ASSETS: InstitutionalAsset[] = [
     summary: 'Institutional hotels + malls managed as a coordinated portfolio.',
     scaleBand: 'Medium-Large',
     status: 'OPERATIONAL',
-    zoneVerified: true,
+    zoneVerified: false,   // a simulated asset never carries Zone's badge (C14)
     ownedBy: 'Titan (operations) · Commerce (services)',
     simulated: true,
   },

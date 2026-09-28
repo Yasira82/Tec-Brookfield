@@ -65,12 +65,14 @@ export default function BrookfieldHome() {
                   <div style={{ padding: 16, background: TEC_COLORS.surface, borderRadius: 12, border: '1px solid #ffffff10', height: '100%' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: 20 }}>{cm.icon} <span style={{ fontSize: 11, opacity: 0.7 }}>{cm.label}</span></span>
-                      <span style={{ fontSize: 11, color: sm.tone, border: `1px solid ${sm.tone}55`, borderRadius: 20, padding: '2px 8px' }}>{sm.label}</span>
+                      {a.simulated
+                        ? <span style={{ fontSize: 11, color: TEC_COLORS.gold, border: `1px solid ${TEC_COLORS.gold}55`, borderRadius: 20, padding: '2px 8px' }}>Simulated</span>
+                        : <span style={{ fontSize: 11, color: sm.tone, border: `1px solid ${sm.tone}55`, borderRadius: 20, padding: '2px 8px' }}>{sm.label}</span>}
                     </div>
                     <div style={{ color: '#e7e7ea', fontWeight: 700, marginTop: 10 }}>{a.name}</div>
                     <div style={{ opacity: 0.65, fontSize: 12.5, marginTop: 6, lineHeight: 1.5 }}>{a.summary}</div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: 11, opacity: 0.6 }}>
-                      <span>{a.scaleBand} · {a.zoneVerified ? '✓ Zone' : '—'}</span>
+                      <span>{a.scaleBand}{!a.simulated && a.zoneVerified ? ' · ✓ Zone' : ''}</span>
                       {a.fundedPct != null && <span>Funded {a.fundedPct}%</span>}
                     </div>
                   </div>
@@ -100,7 +102,8 @@ export default function BrookfieldHome() {
             {GOVERNANCE.map((g) => (
               <div key={g.id} style={{ padding: '10px 14px', background: TEC_COLORS.surface, borderRadius: 10, fontSize: 13, display: 'flex', justifyContent: 'space-between', gap: 10 }}>
                 <span style={{ opacity: 0.85 }}>{g.proposal}</span>
-                <span style={{ opacity: 0.6, fontSize: 12, whiteSpace: 'nowrap' }}>{g.parties} parties · {g.status}</span>
+                {/* Governance records here illustrate simulated assets — no vote happened (C14). */}
+                <span style={{ opacity: 0.6, fontSize: 12, whiteSpace: 'nowrap' }}>{g.parties} parties · simulated</span>
               </div>
             ))}
           </div>
