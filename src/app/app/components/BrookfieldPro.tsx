@@ -13,6 +13,7 @@ import {
   createPaymentRecord,
   createU2APayment,
 } from '@/lib/pi-payment';
+import { CancelProButton } from '@/components/pro/CancelProButton';
 
 const BROOKFIELD_PRO = { id: 'brookfield_pro_monthly', name: 'Brookfield Pro (monthly)', price: 25 };
 
@@ -91,6 +92,7 @@ export default function BrookfieldPro() {
             {daysRemaining <= 7 ? '⏳ ' : ''}Expires in {daysRemaining} day{daysRemaining === 1 ? '' : 's'}{daysRemaining <= 7 ? ' — re-subscribe to keep Pro (one-time monthly, no auto-renewal).' : '.'}
           </div>
         )}
+        <CancelProButton />
       </div>
     );
   }
