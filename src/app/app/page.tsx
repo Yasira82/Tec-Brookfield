@@ -14,8 +14,9 @@ import { ASSETS, ASSET_CLASSES, CLASS_META, STATUS_META, GOVERNANCE } from '@/li
 import BrookfieldPro from './components/BrookfieldPro';
 import { BottomNav, type BrookfieldTab } from './components/BottomNav';
 import { SettingsView } from './components/SettingsView';
+import { SignInGate } from '@/components/pi/SignInGate';
 
-export default function BrookfieldHome() {
+function BrookfieldHome() {
   const { t } = useTranslation();
   const [tab, setTab] = useState<BrookfieldTab>('portfolio');
 
@@ -27,7 +28,7 @@ export default function BrookfieldHome() {
 
   return (
     <main style={{ minHeight: '100vh', background: TEC_COLORS.bg, color: '#e7e7ea', fontFamily: 'system-ui, sans-serif' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 22px calc(96px + env(safe-area-inset-bottom))' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 22px calc(96px + max(env(safe-area-inset-bottom), var(--tec-safe-bottom-fallback, 0px)))' }}>
         <header style={{ marginBottom: 8 }}>
           <div style={{ fontSize: 34 }}>🏗️</div>
           <h1 style={{ color: TEC_COLORS.gold, margin: '4px 0 2px', fontSize: 26 }}>{headerTitle}</h1>
@@ -128,4 +129,11 @@ export default function BrookfieldHome() {
       <BottomNav active={tab} onSelect={setTab} />
     </main>
   );
+}
+
+// The door: a sign-in button before any screen when there is no session
+// (SignInGate — C-123 §10; owner, 2026-10-06). A visit from the Hub arrives
+// signed in (§12) and goes straight through.
+export default function BrookfieldHomeGated() {
+  return <SignInGate><BrookfieldHome /></SignInGate>;
 }
